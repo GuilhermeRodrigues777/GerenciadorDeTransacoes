@@ -1,0 +1,15 @@
+[History]
+1=#P0#=mb	#P1#=cmdSalvar_Click	#P2#=GestaoDeTransacoes/Editor/cmdSalvar_Click	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250727033156	#P7#=0	#P8#=38	.
+2=#P0#=mb	#P1#=Form_Load	#P2#=GestaoDeTransacoes/Editor/Form_Load	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250727030441	#P7#=0	#P8#=28	.
+3=#P0#=mb	#P1#=btInserir_Click	#P2#=GestaoDeTransacoes/Principal/btInserir_Click	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250727032800	#P7#=0	#P8#=90	.
+4=#P0#=mb	#P1#=btEditar_Click	#P2#=GestaoDeTransacoes/Principal/btEditar_Click	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250727033128	#P7#=0	#P8#=29	.
+5=#P0#=mb	#P1#=VerificarID	#P2#=GestaoDeTransacoes/Principal/VerificarID	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250727023815	#P7#=0	#P8#=1	.
+6=#P0#=mb	#P1#=btExcluir_Click	#P2#=GestaoDeTransacoes/Principal/btExcluir_Click	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250727030713	#P7#=0	#P8#=2	.
+7=#P0#=mb	#P1#=timerSucessoEdit_Timer	#P2#=GestaoDeTransacoes/Editor/timerSucessoEdit_Timer	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250727014317	#P7#=0	#P8#=1	.
+8=#P0#=mb	#P1#=VerificarCampoValor	#P2#=GestaoDeTransacoes/Principal/VerificarCampoValor	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250727031438	#P7#=0	#P8#=-8	.
+9=#P0#=mb	#P1#=cmdVoltar_Click	#P2#=GestaoDeTransacoes/Editor/cmdVoltar_Click	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250727031433	#P7#=0	#P8#=4	.
+10=#P0#=mb	#P1#=VerificarCampoData	#P2#=GestaoDeTransacoes/Principal/VerificarCampoData	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250726025111	#P7#=0	#P8#=1	.
+11=#P0#=mb	#P1#=timerSucessoInsert_Timer	#P2#=GestaoDeTransacoes/Principal/timerSucessoInsert_Timer	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250727032727	#P7#=0	#P8#=-6	.
+12=#P0#=mb	#P1#=timerSucessoDelete_Timer	#P2#=GestaoDeTransacoes/Principal/timerSucessoDelete_Timer	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250726010043	#P7#=0	#P8#=1	.
+13=#P0#=mb	#P1#=conectarDB	#P2#=GestaoDeTransacoes/modMain/conectarDB	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250725222127	#P7#=0	#P8#=9	.
+14=#P0#=mb	#P1#=Main	#P2#=GestaoDeTransacoes/modMain/Main	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250725183050	#P7#=0	#P8#=7	.
