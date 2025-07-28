@@ -737,6 +737,7 @@ Private Sub btEditar_Click(Index As Integer)
         
     End If
     
+    xIDDigitado = txtID.Text
     xCondicionaisEditar = sCondicionais
     
     Editor.Show
