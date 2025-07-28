@@ -1,6 +1,7 @@
 VERSION 5.00
 Object = "{CDE57A40-8B86-11D0-B3C6-00A0C90AEA82}#1.0#0"; "MSDATGRD.OCX"
 Object = "{67397AA1-7FB1-11D0-B148-00A0C922E820}#6.0#0"; "MSADODC.OCX"
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form Consulta 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Dados"
@@ -23,6 +24,13 @@ Begin VB.Form Consulta
    ScaleHeight     =   6120
    ScaleWidth      =   9360
    StartUpPosition =   3  'Windows Default
+   Begin MSComDlg.CommonDialog CommonDialog1 
+      Left            =   120
+      Top             =   5160
+      _ExtentX        =   847
+      _ExtentY        =   847
+      _Version        =   393216
+   End
    Begin MSAdodcLib.Adodc Adodc1 
       Height          =   615
       Left            =   7200
@@ -246,22 +254,26 @@ Private Sub cmdExport_Click()
     Dim exlSheet        As Object
     Dim i               As Integer
     Dim linha           As Integer
+    Dim sCaminho        As String
 
-    If xRsGlobal Is Nothing Then
+    If xRsGlobal Is Nothing Or xRsGlobal.EOF Then
         MsgBox "Nenhum dado para exportar", vbExclamation
         Exit Sub
         
     End If
 
-    If xRsGlobal.EOF Then
-        MsgBox "Recordset vazio", vbExclamation
-        Exit Sub
-        
-    End If
+    CommonDialog1.CancelError = True
+    On Error GoTo Fim
+
+    CommonDialog1.DialogTitle = "Salvar planilha Excel"
+    CommonDialog1.Filter = "Arquivos Excel (*.xlsx)|*.xlsx"
+    CommonDialog1.DefaultExt = "xlsx"
+    CommonDialog1.ShowSave
+
+    sCaminho = CommonDialog1.FileName
 
     ' Starta o Excel
     Set exlApp = CreateObject("Excel.Application")
-    exlApp.Visible = True
     Set exlBook = exlApp.Workbooks.Add
     Set exlSheet = exlBook.Sheets(1)
 
@@ -274,6 +286,7 @@ Private Sub cmdExport_Click()
     xRsGlobal.MoveFirst
     
     Do While Not xRsGlobal.EOF
+    
         For i = 0 To xRsGlobal.Fields.Count - 1
             exlSheet.Cells(linha, i + 1).Value = xRsGlobal.Fields(i).Value
         Next i
@@ -285,10 +298,25 @@ Private Sub cmdExport_Click()
 
     exlSheet.Columns.AutoFit
 
-    MsgBox "Exportação concluída com sucesso", vbInformation
+    ' Salva no local escolhido
+    exlBook.SaveAs sCaminho
+    MsgBox "Arquivo salvo com sucesso em:" & vbCrLf & sCaminho, vbInformation
 
+    exlBook.Close False
+    exlApp.Quit
     Set exlSheet = Nothing
     Set exlBook = Nothing
     Set exlApp = Nothing
+    
+    Exit Sub
+
+Fim:
+    If Err.Number = 32755 Then
+        MsgBox "Exportação cancelada.", vbInformation
+        
+    Else
+        MsgBox "Erro ao salvar: " & Err.Description, vbCritical
+        
+    End If
     
 End Sub
