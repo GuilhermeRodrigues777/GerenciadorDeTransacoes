@@ -5,6 +5,7 @@ Option Explicit
 Public xIDDigitado                  As Integer
 Public xCondicionaisEditar          As String
 Public xCondicionaisConsultar       As String
+Public xRsGlobal                    As ADODB.Recordset
 
 '--------------------------------------------------------------------------------
 ' Project    :       GestaoDeTransacoes
