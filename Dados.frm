@@ -206,11 +206,11 @@ Private Sub Form_Load()
                  "Option=3;"
 
     sSQL = "SELECT " & _
-           "ID_Transacao, " & _
-           "Numero_Cartao, " & _
-           "Valor_Transacao, " & _
-           "DATE_FORMAT(Data_Transacao, '%d/%m/%Y') AS DataFormatada, " & _
-           "Descricao " & _
+            "Numero_Cartao, " & _
+            "Valor_Transacao, " & _
+            "DATE_FORMAT(Data_Transacao, '%d/%m/%Y') AS DataFormatada, " & _
+            "Descricao, " & _
+            "Categorias_Transacao(Valor_Transacao) AS Categoria " & _
            "FROM transacoes WHERE " & xCondicionaisConsultar
 
     Set xRsGlobal = New ADODB.Recordset

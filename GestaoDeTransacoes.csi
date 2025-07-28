@@ -1,6 +1,6 @@
 [History]
 1=#P0#=mb	#P1#=cmdExport_Click	#P2#=GestaoDeTransacoes/Consulta/cmdExport_Click	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250728002341	#P7#=0	#P8#=11	.
-2=#P0#=mb	#P1#=Form_Load	#P2#=GestaoDeTransacoes/Consulta/Form_Load	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250728001309	#P7#=0	#P8#=19	.
+2=#P0#=mb	#P1#=Form_Load	#P2#=GestaoDeTransacoes/Consulta/Form_Load	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250728002951	#P7#=0	#P8#=9	.
 3=#P0#=mb	#P1#=VerificarID	#P2#=GestaoDeTransacoes/modGlobal/VerificarID	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250728000546	#P7#=0	#P8#=-9	.
 4=#P0#=mb	#P1#=cmdVoltar_Click	#P2#=GestaoDeTransacoes/Consulta/cmdVoltar_Click	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20250727233706	#P7#=0	#P8#=-3	.
 5=#P0#=mb	#P1#=btEditar_Click	#P2#=GestaoDeTransacoes/Principal/btEditar_Click	#P3#=	#P4#=	#P5#=MembEventProcPrivate	#P6#=20250727214112	#P7#=0	#P8#=1	.
