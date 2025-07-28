@@ -251,7 +251,7 @@ Private Sub Form_Load()
     comando.ActiveConnection = conexao
     
     ' Consulta quais são os dados retornados com o ID inserido
-    comando.CommandText = "SELECT * FROM transacoes WHERE ID_Transacao = '" & xIDDigitado & "'"
+    comando.CommandText = "SELECT * FROM transacoes WHERE " & xCondicionaisEditar
     Set rs = comando.Execute
     
     ' Se não der EndOfFile significa que encontrou dados
@@ -264,7 +264,7 @@ Private Sub Form_Load()
         txtDesc_Editar.Text = rs("Descricao")
     
     Else
-        MsgBox "Não foi encontrado registro com esse ID", vbExclamation
+        MsgBox "Não foi encontrado registro os dados inseridos", vbExclamation
         Exit Sub
         
     End If
@@ -297,6 +297,21 @@ Private Sub cmdSalvar_Click()
         MsgBox "Todos os campos devem ser preenchidos", vbExclamation
         Exit Sub
         
+    End If
+    
+    If txtNumCartao_Editar.Text <> "" Then
+        If VerificarNumCartao(txtNumCartao_Editar) Then Exit Sub
+        
+    End If
+    
+    If txtValor_Editar.Text <> "" Then
+        If VerificarValor(txtValor_Editar) Then Exit Sub
+    
+    End If
+    
+    If txtData_Editar.Text <> "" Then
+        If VerificarData(txtData_Editar) Then Exit Sub
+    
     End If
     
     ' Liga conexão com o bd

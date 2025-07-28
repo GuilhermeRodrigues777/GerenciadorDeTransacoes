@@ -459,31 +459,17 @@ Private Sub btInserir_Click(Index As Integer)
         
     End If
     
-    ' Valida se valores de entrada são números
-    If Not IsNumeric(txtID.Text) Then
-        MsgBox "ID da transação é inválido", vbExclamation
-        txtID.SetFocus
-        txtID.ForeColor = vbRed
-        Exit Sub
-        
-    End If
+    ' Valida se valores de entrada são válidos
+    If VerificarID("Inserir", txtID) Then Exit Sub
     
-    If Not IsNumeric(txtNumCartao.Text) Then
-        MsgBox "Cartão digitado é inválido", vbExclamation
-        txtNumCartao.SetFocus
-        txtNumCartao.ForeColor = vbRed
-        Exit Sub
-        
-    End If
+    If VerificarNumCartao(txtNumCartao) Then Exit Sub
     
-    If Not VerificarCampoValor Then Exit Sub
+    If VerificarValor(txtValor) Then Exit Sub
     
-    If Not VerificarID("Inserir", txtID.Text) Then Exit Sub
+    If VerificarData(txtData) Then Exit Sub
     
     ' Liga conexão com o bd
     comando.ActiveConnection = conexao
-    
-    If Not VerificarCampoData Then Exit Sub
     
     ' Insere os dados no bd
     comando.CommandText = "INSERT INTO transacoes (ID_Transacao, Numero_Cartao, Valor_Transacao, Data_Transacao, Descricao) VALUES (?, ?, ?, ?, ?)"
@@ -520,6 +506,7 @@ End Sub
 Private Sub btExcluir_Click(Index As Integer)
     
     Dim comando             As New ADODB.Command
+    Dim rs                  As ADODB.Recordset
     Dim sResposta           As VbMsgBoxResult
     Dim sID                 As Integer
     Dim sNumCartao          As Long
@@ -548,120 +535,63 @@ Private Sub btExcluir_Click(Index As Integer)
     comando.ActiveConnection = conexao
     
     If txtID.Text <> "" Then
-    
-        If IsNumeric(txtID.Text) Then
-            
-            If VerificarID("Excluir", txtID.Text) Then
-                sID = txtID.Text
-                
-            Else
-                MsgBox "Não foi encontrado registro com esse ID", vbExclamation
-                Exit Sub
-                
-            End If
-            
-        Else
-            MsgBox "ID da transação inserido é inválido", vbExclamation
-            txtID.SetFocus
-            txtID.ForeColor = vbRed
-            Exit Sub
-            
-        End If
+        If VerificarID("Excluir", txtID) Then Exit Sub
+        sID = txtID.Text
         
     End If
     
     If txtNumCartao.Text <> "" Then
+        If VerificarNumCartao(txtNumCartao) Then Exit Sub
+            
+        ' Verifica se já existe alguma transação com o número de cartão informado
+        comando.CommandText = "SELECT * FROM transacoes WHERE Numero_Cartao = '" & txtNumCartao.Text & "'"
+        Set rs = comando.Execute
         
-        If IsNumeric(txtNumCartao.Text) Then
-            
-            ' Verifica se já existe alguma transação com o número de cartão informado
-            comando.CommandText = "SELECT * FROM transacoes WHERE Numero_Cartao = '" & txtNumCartao.Text & "'"
-            Set rs = comando.Execute
-            
-            If Not rs.EOF Then ' Se não der EndOfFile significa que encontrou dados
-                sNumCartao = txtNumCartao.Text
-            
-            Else
-                MsgBox "Não foi encontrado registro com esse número de cartão", vbExclamation
-                Exit Sub
-                
-            End If
-            
-            rs.Close
+        If Not rs.EOF Then ' Se não der EndOfFile significa que encontrou dados
+            sNumCartao = txtNumCartao.Text
         
         Else
-            MsgBox "Número do cartão inserido é inválido", vbExclamation
-            txtNumCartao.SetFocus
-            txtNumCartao.ForeColor = vbRed
+            MsgBox "Não foi encontrado registro com esse número de cartão", vbExclamation
             Exit Sub
-        
+            
         End If
+        
+        rs.Close
         
     End If
     
     If txtValor.Text <> "" Then
+        If VerificarValor(txtValor) Then Exit Sub
         
-        If IsNumeric(txtValor.Text) Then
-            sValorComPonto = InStr(1, txtValor.Text, ".")
-    
-            If sValorComPonto > 0 Then
-              txtValor.Text = Replace(txtValor.Text, ".", ",")
-              
-            End If
-            
-            ' Verifica se já existe alguma transação com o valor informado
-            comando.CommandText = "SELECT * FROM transacoes WHERE Valor_Transacao = '" & txtValor.Text & "'"
-            Set rs = comando.Execute
-            
-            If Not rs.EOF Then ' Se não der EndOfFile significa que encontrou dados
-                sValor = txtValor.Text
-            
-            Else
-                MsgBox "Não foi encontrado registro com esse valor", vbExclamation
-                Exit Sub
-                
-            End If
-            
-            rs.Close
+        ' Verifica se já existe alguma transação com o valor informado
+        comando.CommandText = "SELECT * FROM transacoes WHERE Valor_Transacao = '" & txtValor.Text & "'"
+        Set rs = comando.Execute
+        
+        If Not rs.EOF Then ' Se não der EndOfFile significa que encontrou dados
+            sValor = txtValor.Text
         
         Else
-            MsgBox "Valor inserido é inválido", vbExclamation
-            txtValor.SetFocus
-            txtValor.ForeColor = vbRed
+            MsgBox "Não foi encontrado registro com esse valor", vbExclamation
             Exit Sub
             
         End If
         
+        rs.Close
+        
     End If
     
     If txtData.Text <> "" Then
+        If VerificarData(txtData) Then Exit Sub
         
-        If Len(txtData.Text) = 8 And InStr(txtData.Text, "/") = 0 Then
-            txtData.Text = Left(txtData.Text, 2) & "/" & Mid(txtData.Text, 3, 2) & "/" & Right(txtData.Text, 4)
-            
-            ' Verifica se data é válida
-            If IsDate(txtData.Text) Then
-                ' Verifica se já existe alguma transação com o valor informado
-                comando.CommandText = "SELECT * FROM transacoes WHERE Data = '" & txtData.Text & "'"
-                Set rs = comando.Execute
-                
-                If Not rs.EOF Then ' Se não der EndOfFile significa que encontrou dados
-                    sData = txtData.Text
-                
-                Else
-                    MsgBox "Não foi encontrado registro com esse valor", vbExclamation
-                    Exit Sub
-                    
-                End If
-                
-            Else
-                MsgBox "Data inserida é inválida", vbExclamation
-                Exit Sub
-                
-            End If
-          
+        ' Verifica se já existe alguma transação com o valor informado
+        comando.CommandText = "SELECT * FROM transacoes WHERE Data = '" & txtData.Text & "'"
+        Set rs = comando.Execute
+        
+        If Not rs.EOF Then ' Se não der EndOfFile significa que encontrou dados
+            sData = txtData.Text
+        
         Else
-            MsgBox "Data inserida é inválida", vbExclamation
+            MsgBox "Não foi encontrado registro com esse valor", vbExclamation
             Exit Sub
             
         End If
@@ -740,7 +670,7 @@ Private Sub btExcluir_Click(Index As Integer)
         
         comando.Execute
         
-        lblSucessoDelete.Caption = "Registro(s) deletado(s) com sucesso."
+        lblSucessoDelete.Caption = "Registro deletado com sucesso."
         txtID.Text = ""
         txtNumCartao.Text = ""
         txtValor.Text = ""
@@ -766,32 +696,49 @@ End Sub
 '--------------------------------------------------------------------------------
 Private Sub btEditar_Click(Index As Integer)
     
-    If txtID.Text <> "" Then
-        
-        If IsNumeric(txtID.Text) Then
-            
-            If Not VerificarID("Editar", txtID.Text) Then
-                MsgBox "Não foi encontrado registro com esse ID", vbExclamation
-                Exit Sub
-                
-            End If
-            
-        Else
-            MsgBox "ID da transação inserido é inválido", vbExclamation
-            txtID.SetFocus
-            txtID.ForeColor = vbRed
-            Exit Sub
-            
-        End If
-    
-    Else
-        MsgBox "ID da transação precisa ser informado", vbExclamation
-        txtID.SetFocus
+    If txtID.Text = "" Then
+        MsgBox "Pelo menos o campo ID precisa ser informado", vbExclamation
         Exit Sub
+        
+    End If
+    
+    If txtID.Text <> "" Then
+        If VerificarID("Editar", txtID) Then Exit Sub
+        sCondicionais = sCondicionais & "ID_Transacao = '" & txtID.Text & "' AND "
+
+    End If
+    
+    If txtNumCartao.Text <> "" Then
+        If VerificarNumCartao(txtNumCartao) Then Exit Sub
+        sCondicionais = sCondicionais & "Numero_Cartao = '" & txtNumCartao.Text & "' AND "
+        
+    End If
+    
+    If txtValor.Text <> "" Then
+        If VerificarValor(txtValor) Then Exit Sub
+        sCondicionais = sCondicionais & "Valor_Transacao = '" & txtValor.Text & "' AND "
+        
+    End If
+    
+    If txtData.Text <> "" Then
+        If VerificarData(txtData) Then Exit Sub
+        sCondicionais = sCondicionais & "Data_Transacao = '" & Format(txtData.Text, "yyyy-mm-dd") & "' AND "
+        
+    End If
+    
+    If txtDesc.Text <> "" Then
+        sCondicionais = sCondicionais & "Descricao = '" & txtDesc.Text & "' AND "
     
     End If
     
-    xIDDigitado = txtID.Text ' Armazena o valor em uma variável global para utilizar adiante
+    ' Remove o último "AND"
+    If Right(sCondicionais, 5) = " AND " Then
+        sCondicionais = Left(sCondicionais, Len(sCondicionais) - 5)
+        
+    End If
+    
+    xCondicionaisEditar = sCondicionais
+    
     Editor.Show
     
     lblSucessoEdit.Caption = "Registro alterado com sucesso."
@@ -806,7 +753,75 @@ Private Sub btEditar_Click(Index As Integer)
 
 End Sub
 
+'--------------------------------------------------------------------------------
+' Project    :       GestaoDeTransacoes
+' Name       :       btConsultar_Click
+' Description:       Verifica requisitos necessários e realiza consulta dos dados no bd
+' Created by :       Guilherme Rodrigues
+' Parameters :       Index (Integer)
+'--------------------------------------------------------------------------------
+Private Sub btConsultar_Click(Index As Integer)
 
+    Dim sCondicionais   As String
+    
+    sCondicionais = ""
+
+    If txtID.Text = "" And _
+    txtNumCartao.Text = "" And _
+    txtValor.Text = "" And _
+    txtData.Text = "" And _
+    txtDesc.Text = "" Then
+        MsgBox "Pelo menos 1 campo precisa ser informado", vbExclamation
+        Exit Sub
+        
+    End If
+    
+    If txtID.Text <> "" Then
+        If VerificarID("Consultar", txtID) Then Exit Sub
+        sCondicionais = sCondicionais & "ID_Transacao = '" & txtID.Text & "' AND "
+    
+    End If
+    
+    If txtNumCartao.Text <> "" Then
+        If VerificarNumCartao(txtNumCartao) Then Exit Sub
+        sCondicionais = sCondicionais & "Numero_Cartao = '" & txtNumCartao.Text & "' AND "
+        
+    End If
+    
+    If txtValor.Text <> "" Then
+        If VerificarValor(txtValor) Then Exit Sub
+        sCondicionais = sCondicionais & "Valor_Transacao = '" & txtValor.Text & "' AND "
+        
+    End If
+    
+    If txtData.Text <> "" Then
+        If VerificarData(txtData) Then Exit Sub
+        sCondicionais = sCondicionais & "Data_Transacao = '" & Format(txtData.Text, "yyyy-mm-dd") & "' AND "
+        
+    End If
+    
+    If txtDesc.Text <> "" Then
+        sCondicionais = sCondicionais & "Descricao = '" & txtDesc.Text & "' AND "
+    
+    End If
+    
+    ' Remove o último "AND"
+    If Right(sCondicionais, 5) = " AND " Then
+        sCondicionais = Left(sCondicionais, Len(sCondicionais) - 5)
+        
+    End If
+    
+    xCondicionaisConsultar = sCondicionais
+    
+    Consulta.Show
+    
+    txtID.Text = ""
+    txtNumCartao.Text = ""
+    txtValor.Text = ""
+    txtData.Text = ""
+    txtDesc.Text = ""
+
+End Sub
 
 '--------------------------------------------------------------------------------
 ' Project    :       GestaoDeTransacoes
@@ -846,99 +861,3 @@ Private Sub timerSucessoEdit_Timer()
     timerSucessoEdit.Enabled = False
 
 End Sub
-
-'--------------------------------------------------------------------------------
-' Project    :       GestaoDeTransacoes
-' Name       :       VerificarCampoValor
-' Description:       Verifica se usuário digitou valor com vírgula e substitui por ponto
-' Created by :       Guilherme Rodrigues
-'--------------------------------------------------------------------------------
-Private Function VerificarCampoValor() As Boolean
-    
-    Dim sValorComVirgula    As String
-    
-    VerificarCampoValor = False
-    
-    If Not IsNumeric(txtValor.Text) Then
-        MsgBox "Valor digitado é inválido", vbExclamation
-        txtValor.SetFocus
-        txtValor.ForeColor = vbRed
-        Exit Function
-        
-    End If
-    
-    sValorComVirgula = InStr(1, txtValor.Text, ".")
-    
-    If sValorComVirgula > 0 Then
-      txtValor.Text = Replace(txtValor.Text, ".", ",")
-      
-    End If
-    
-    VerificarCampoValor = True
-
-End Function
-
-'--------------------------------------------------------------------------------
-' Project    :       GestaoDeTransacoes
-' Name       :       VerificarCampoValor
-' Description:       Verifica se usuário não digitou data com barra
-' Created by :       Guilherme Rodrigues
-'--------------------------------------------------------------------------------
-Private Function VerificarCampoData() As Boolean
-    
-    VerificarCampoData = False
-    
-    If Len(txtData.Text) = 8 And InStr(txtData.Text, "/") = 0 Then
-        txtData.Text = Left(txtData.Text, 2) & "/" & Mid(txtData.Text, 3, 2) & "/" & Right(txtData.Text, 4)
-    
-    End If
-    
-    ' Verifica se data é válida
-    If Not IsDate(txtData.Text) Then
-        MsgBox "Data inserida é inválida", vbExclamation
-        Exit Function
-        
-    End If
-    
-    VerificarCampoData = True
-
-End Function
-
-'--------------------------------------------------------------------------------
-' Project    :       GestaoDeTransacoes
-' Name       :       VerificarID
-' Description:       Verifica se já existe alguma transação com o ID informado
-' Parameters :       sMetodo (String) - De onde vem o pedido para consulta do ID no bd
-'                    sID (Integer)    - Qual ID deve ser utilizado para consulta
-' Created by :       Guilherme Rodrigues
-'--------------------------------------------------------------------------------
-Private Function VerificarID(ByVal sMetodo As String, ByVal sID As Integer) As Boolean
-    
-    Dim comando         As New ADODB.Command
-    
-    Set rs = New ADODB.Recordset
-    VerificarID = False
-    
-    ' Liga conexão com o bd
-    comando.ActiveConnection = conexao
-    
-    ' Verifica se já existe alguma transação com o ID informado
-    comando.CommandText = "SELECT * FROM transacoes WHERE ID_Transacao = '" & sID & "'"
-    Set rs = comando.Execute
-    
-    If Not rs.EOF Then ' Se não der EndOfFile significa que encontrou dados
-    
-        If sMetodo = "Inserir" Then
-            txtID.Text = ""
-            MsgBox "ID inserido já existe na base de dados", vbExclamation
-            Exit Function
-        
-        End If
-        
-    End If
-    
-    VerificarID = True
-    
-    rs.Close
-    
-End Function
